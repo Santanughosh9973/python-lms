@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library Management System - Academic Project Report</title>
+  <style>
+    /* =========================================================
+       ACADEMIC PROJECT REPORT - PRINT & DISPLAY STYLESHEET
+       Strict A4 Dimensions & Printable Page Breaks
+    ========================================================= */
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --report-font: sans-serif, "Times New Roman", Times, serif;
+      --border-width: 1.5px;
+      --border-style: solid;
+    }
+
+    body {
+      background-color: #4b5563;
+      font-family: var(--report-font);
+      color: #0f172a;
+      line-height: 1.45;
+      font-size: 10.5pt;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Screen Top Bar */
+    .top-action-bar {
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .top-action-bar h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      color: #ffffff;
+      text-align: left;
+    }
+
+    .print-btn {
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .print-btn:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    /* Editor Controls */
+    .editor-tools {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+    }
+
+    .editor-tools label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .editor-tools select {
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #ffffff;
+      font-size: 0.85rem;
+    }
+
+    .tool-btn {
+      background: #334155;
+    }
+
+    .tool-btn:hover {
+      background: #475569;
+    }
+
+    .tool-btn.active {
+      background: #16a34a;
+    }
+
+    .save-status {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      min-width: 90px;
+    }
+
+    body.editing .page-content:hover,
+    body.editing .page-border>div:hover {
+      outline: 1px dashed #93c5fd;
+    }
+
+    body.editing [contenteditable="true"]:focus {
+      outline: none;
+    }
+
+    /* Page Container */
+    .report-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 0;
+    }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      overflow: hidden;
+      margin: 14px auto;
+      background: #ffffff;
+      padding: 9mm;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-border {
+      border: var(--border-width) var(--border-style) #111827;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      padding: 14mm 16mm 10mm 16mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .page-content {
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Typography */
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-weight: bold;
+      color: #0f172a;
+      text-align: center;
+    }
+
+    .chapter-heading {
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .chapter-num {
+      font-size: 12pt;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #1e3a8a;
+      margin-bottom: 2px;
+    }
+
+    .chapter-title {
+      font-size: 14pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-bottom: 1.5px solid #0f172a;
+      padding-bottom: 3px;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .section-title {
+      font-size: 11pt;
+      font-weight: bold;
+      margin-top: 8px;
+      margin-bottom: 3px;
+      text-align: left;
+      color: #0f172a;
+    }
+
+    p {
+      text-align: justify;
+      text-justify: inter-word;
+      margin-bottom: 6px;
+      line-height: 1.42;
+    }
+
+    .key-badge {
+      display: inline-block;
+      background: #f1f5f9;
+      border-left: 3px solid #2563eb;
+      padding: 2px 6px;
+      font-weight: 600;
+      font-size: 9.5pt;
+    }
+
+    /* Running Page Number */
+    .page-footer {
+      text-align: center;
+      font-size: 10pt;
+      padding-top: 8px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    /* Tables */
+    table.report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 6px 0;
+      font-size: 8.8pt;
+      line-height: 1.35;
+    }
+
+    table.report-table th,
+    table.report-table td {
+      border: 1px solid #1e293b;
+      padding: 4.5px 6.5px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    table.report-table th {
+      background-color: #f1f5f9;
+      font-weight: bold;
+      color: #0f172a;
+    }
+
+    table.left-align td {
+      text-align: left;
+    }
+
+    /* Figures & SVG Containers */
+    .figure-container {
+      text-align: center;
+      margin: 5px 0;
+    }
+
+    .figure-container svg {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #cbd5e1;
+      background: #fafafa;
+      border-radius: 4px;
+    }
+
+    .figure-caption {
+      font-size: 8.8pt;
+      font-weight: bold;
+      margin-top: 3px;
+      text-align: center;
+      color: #334155;
+    }
+
+    /* Cover Page Elements */
+    .cover-title {
+      font-size: 18pt;
+      font-weight: bold;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      letter-spacing: 0.8px;
+    }
+
+    .cover-subtitle {
+      font-size: 12.5pt;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .cover-subheading {
+      font-size: 10.5pt;
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+
+    .uni-emblem {
+      width: 72px;
+      height: 72px;
+      margin: 8px auto 4px auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    /* Signatures */
+    .signature-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 65px;
+      padding: 0 12px;
+    }
+
+    .sign-block {
+      text-align: center;
+      width: 44%;
+      font-size: 9pt;
+      line-height: 1.35;
+    }
+
+    .sign-line {
+      border-top: 1px dashed #000;
+      margin-bottom: 6px;
+      padding-top: 4px;
+      font-weight: bold;
+    }
+
+    /* Print Setup */
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+      }
+
+      .top-action-bar {
+        display: none !important;
+      }
+
+      .report-container {
+        padding: 0 !important;
+      }
+
+      .page {
+        margin: 0 !important;
+        box-shadow: none !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        break-inside: avoid !important;
+        height: 297mm;
+      }
+
+      .page:last-child {
+        page-break-after: auto !important;
+        break-after: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Screen Top Bar with Print Trigger -->
+  <div class="top-action-bar">
+    <div>
+      <h2>Library Management System — Academic Project Report</h2>
+      <small style="opacity: 0.85;">Brainware University • Department of Computational Sciences • May 2026</small>
+    </div>
+    <div class="editor-tools">
+      <label>Border
+        <select id="borderSelect">
+          <option value="1.5px solid">Single</option>
+          <option value="3px solid">Thick</option>
+          <option value="4px double">Double</option>
+          <option value="1.5px dashed">Dashed</option>
+          <option value="2px dotted">Dotted</option>
+          <option value="0px none">None</option>
+        </select>
+      </label>
+      <label>Font
+        <select id="fontSelect">
+          <option value='"Times New Roman", Times, serif'>Times New Roman</option>
+          <option value='Georgia, serif'>Georgia</option>
+          <option value='Cambria, Caladea, serif'>Cambria</option>
+          <option value='"Palatino Linotype", "Book Antiqua", Palatino, serif'>Palatino</option>
+          <option value='Arial, Helvetica, sans-serif'>Arial</option>
+          <option value='Calibri, Carlito, sans-serif'>Calibri</option>
+          <option value='Verdana, Geneva, sans-serif'>Verdana</option>
+        </select>
+      </label>
+      <button type="button" class="print-btn tool-btn" id="editBtn">✏️ Edit</button>
+      <button type="button" class="print-btn tool-btn" id="saveBtn">💾 Save</button>
+      <span class="save-status" id="saveStatus"></span>
+      <button type="button" class="print-btn" onclick="window.print()">
+        <span>🖨️</span> Save as PDF / Print
+      </button>
+    </div>
+  </div>
+
+  <div class="report-container">
+
+    <!-- =========================================================
+         PAGE 1: OUTER COVER PAGE
+    ========================================================== -->
+    <div class="page">
+      <div class="page-border" style="justify-content: space-between; text-align: center;">
+        <div>
+          <div class="cover-title">LIBRARY MANAGEMENT SYSTEM</div>
+          <div class="cover-subtitle">A PROJECT REPORT</div>
+          <div class="cover-subheading">Submitted by</div>
+
+          <table class="report-table" style="margin: 10px auto; max-width: 90%;">
+            <thead>
+              <tr>
+                <th style="width: 35%;">STUDENT NAME</th>
+                <th style="width: 35%;">STUDENT CODE</th>
+                <th style="width: 65%;">REGISTRATION NO.</th>
+                <th style="width: 35%;">ROLL NO.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>AVIJAN MAITY</strong></td>
+                <td><strong>BWU/MCA/26/020</strong></td>
+                <td><strong>26102000138</strong></td>
+                <td><strong>26102410016</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="margin: 10px 0 4px 0; font-size: 10.5pt; font-style: italic;">
+            in partial fulfillment for the award of the degree
+          </div>
+          <div style="margin-bottom: 4px; font-size: 10.5pt;">of</div>
+          <div style="font-size: 13pt; font-weight: bold; margin-bottom: 4px; letter-spacing: 0.5px;">
+            MASTER OF COMPUTER APPLICATIONS
+          </div>
+          <div style="margin-bottom: 4px; font-size: 10.5pt;">IN</div>
+          <div style="font-size: 11.5pt; font-weight: bold; margin-bottom: 8px;">
+            DEPARTMENT OF COMPUTATIONAL SCIENCES
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 12.5pt; font-weight: bold; margin-bottom: 2px;">
+            BRAINWARE UNIVERSITY
+          </div>
+          <div style="font-size: 9.5pt; margin-bottom: 6px;">
+            398, Ramkrishnapur Road, Barasat, North 24 Parganas, Kolkata - 700 125
+          </div>
+          <img src="university-logo.png" alt="Brainware University" class="uni-emblem"
+            onerror="this.style.display='none'">
+        </div>
+      </div>
+    </div>
+    <!-- =========================================================
+         PAGE 5: ABSTRACT
+    ========================================================== -->
+    <div class="page">
+      <div class="page-border">
+        <div class="page-content">
+          <h2
+            style="font-size: 14pt; text-align: center; margin-bottom: 18px; text-transform: uppercase; letter-spacing: 0.5px;">
+            ABSTRACT
+          </h2>
+
+          <p>
+            Conventional library operations in educational institutions often rely on manual ledger books or
+            disconnected spreadsheets, which are prone to data inconsistency, miscounted book copies, and
+            error-prone manual calculation of overdue penalties. For small and medium-sized college libraries, a
+            simple, reliable, and easily deployable tool is needed that does not require a database server or
+            expensive software.
+          </p>
+
+          <p>
+            This project presents the <strong>“LIBRARY MANAGEMENT SYSTEM,”</strong> a terminal-based
+            circulation and inventory management application built with <strong>Python Object-Oriented
+              Programming (OOP)</strong> and backed by lightweight <strong>JSON file storage</strong>.
+            The system models core library entities through the <code>Book</code> and <code>Student</code> classes,
+            while the <code>Library</code> class manages data loading, saving, validation, and all circulation
+            operations. The entire application is contained in a single <code>main.py</code> file and uses only the
+            Python standard library.
+          </p>
+
+          <p>
+            Key features include: <strong>(1) Validated Catalog Management</strong> that checks author names using
+            regular expressions and merges duplicate titles by increasing the copy count; <strong>(2) Derived
+              Availability Tracking</strong> in which available copies are calculated from active issue transactions
+            instead of being stored separately; <strong>(3) Issue and Return Workflow</strong> with date validation
+            and an automatic overdue fine of ₹5 per day calculated at the time of return; and
+            <strong>(4) Search, History and Statistics</strong> offering partial-match book search, a transaction
+            history sorted by latest issue, and a summary of the most frequently issued titles.
+          </p>
+
+          <p>
+            The software was validated through manual functional testing of every menu option using valid,
+            invalid, and boundary inputs, confirming correct input validation, accurate fine calculation,
+            persistence of records across program restarts, and graceful handling of missing or corrupted data
+            files.
+          </p>
+
+          <div style="margin-top: 18px; font-size: 9.5pt; line-height: 1.45;">
+            <strong>Keywords:</strong> Library Management System, Object-Oriented Programming (OOP), JSON Data Storage,
+            Book Circulation, Overdue Fine Calculation, Command-Line Interface (CLI), Input Validation.
+          </div>
+        </div>
+
+        <div class="page-footer">iii</div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         PAGE 6: TABLE OF CONTENTS
+    ========================================================== -->
+    <div class="page">
+      <div class="page-border">
+        <div class="page-content">
+          <h2 style="font-size: 14pt; text-align: center; margin-bottom: 14px; text-transform: uppercase;">
+            TABLE OF CONTENTS
+          </h2>
+
+          <table class="report-table left-align" style="font-size: 8.5pt;">
+            <thead>
+              <tr>
+                <th style="width: 14%; text-align: center;">Chapter</th>
+                <th style="width: 72%; text-align: left;">Title</th>
+                <th style="width: 14%; text-align: center;">Page No.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center;"></td>
+                <td><strong>ABSTRACT</strong></td>
+                <td style="text-align:center;">iii</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"></td>
+                <td><strong>LIST OF TABLES</strong></td>
+                <td style="text-align:center;">v</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"></td>
+                <td><strong>LIST OF FIGURES</strong></td>
+                <td style="text-align:center;">v</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"></td>
+                <td><strong>LIST OF SYMBOLS & ABBREVIATIONS</strong></td>
+                <td style="text-align:center;">vi</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><strong>1.</strong></td>
+                <td><strong>INTRODUCTION</strong></td>
+                <td style="text-align:center;">1</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><strong>2.</strong></td>
+                <td><strong>OBJECTIVES</strong></td>
+                <td style="text-align:center;">1</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><strong>3.</strong></td>
+                <td><strong>PLANNING & METHODOLOGY</strong></td>
+                <td style="text-align:center;">2</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><strong>4.</strong></td>
+                <td><strong>REQUIREMENT ANALYSIS</strong></td>
+                <td style="text-align:center;">2</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><strong>5.</strong></td>
+                <td><strong>SYSTEM FLOW & ARCHITECTURAL DIAGRAMS</strong></td>
+                <td style="text-align:center;">3</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"></td>
+                <td>5.1 System Context & Data Flow (CLD & DFD Level 0)</td>
+                <td style="text-align:center;">3</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"></td>
+                <td>5.2 Use Case & Entity–Relationship Models</td>
+                <td style="text-align:center;">3</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"></td>
+                <td>5.3 Circulation & Overdue Fine Lifecycle Flowchart</td>
+                <td style="text-align:center;">3</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><strong>6.</strong></td>
+                <td><strong>PROPOSED DESIGN & CLASS ARCHITECTURE</strong></td>
+                <td style="text-align:center;">4</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><strong>7.</strong></td>
+                <td><strong>SYSTEM MECHANISM, WORKFLOW & DATA HANDLING</strong></td>
+                <td style="text-align:center;">4</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"></td>
+                <td>7.1 End-to-End System Workflow</td>
+                <td style="text-align:center;">4</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"></td>
+                <td>7.2 Core Circulation Engine & Fine Calculation</td>
+                <td style="text-align:center;">5</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"></td>
+                <td>7.3 JSON Persistence & Derived Availability Tracking</td>
+                <td style="text-align:center;">5</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><strong>8.</strong></td>
+                <td><strong>CHALLENGES & PROBLEMS FACED DURING DEVELOPMENT</strong></td>
+                <td style="text-align:center;">5</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><strong>9.</strong></td>
+                <td><strong>EXPERIMENTAL RESULTS & TESTING</strong></td>
+                <td style="text-align:center;">6</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><strong>10.</strong></td>
+                <td><strong>FUTURE SCOPE & CONCLUSION</strong></td>
+                <td style="text-align:center;">6</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><strong></strong></td>
+                <td><strong>APPENDICES (A: Screens, B: Code, C: Data Files, D: Test Cases)</strong></td>
+                <td style="text-align:center;">7</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><strong></strong></td>
+                <td><strong>REFERENCES</strong></td>
+                <td style="text-align:center;">8</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="page-footer">iv</div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         PAGE 7: LIST OF TABLES & LIST OF FIGURES
+    ========================================================== -->
+    <div class="page">
+      <div class="page-border">
+        <div class="page-content">
+          <h2 style="font-size: 12.5pt; text-align: center; margin-bottom: 6px; text-transform: uppercase;">
+            LIST OF TABLES
+          </h2>
+
+          <table class="report-table left-align" style="font-size: 8.5pt; margin-bottom: 12px;">
+            <thead>
+              <tr>
+                <th style="width: 20%; text-align: center;">Table No.</th>
+                <th style="width: 65%; text-align: left;">Table Caption</th>
+                <th style="width: 15%; text-align: center;">Page No.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center;">Table 1.1</td>
+                <td>Library Management System Operational Capabilities & Scope Overview</td>
+                <td style="text-align:center;">1</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Table 3.1</td>
+                <td>Work Breakdown Structure (WBS) & Development Schedule</td>
+                <td style="text-align:center;">2</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Table 4.1</td>
+                <td>System Functional Requirements Specification</td>
+                <td style="text-align:center;">2</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Table 4.2</td>
+                <td>System Non-Functional Requirements & Performance Metrics</td>
+                <td style="text-align:center;">2</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Table 7.1</td>
+                <td>End-to-End Circulation Workflow Stages & Internal Engine Actions</td>
+                <td style="text-align:center;">4</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Table 9.1</td>
+                <td>Module-Wise Functional Testing Outcomes (Manual Tests)</td>
+                <td style="text-align:center;">6</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Table C.1</td>
+                <td>JSON Data Structure Specification ('transactions.json' Records)</td>
+                <td style="text-align:center;">8</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Table D.1</td>
+                <td>Representative Manual Test Cases Execution Matrix</td>
+                <td style="text-align:center;">8</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2
+            style="font-size: 12.5pt; text-align: center; margin-top: 6px; margin-bottom: 6px; text-transform: uppercase;">
+            LIST OF FIGURES
+          </h2>
+
+          <table class="report-table left-align" style="font-size: 8.5pt;">
+            <thead>
+              <tr>
+                <th style="width: 20%; text-align: center;">Figure No.</th>
+                <th style="width: 65%; text-align: left;">Figure Caption</th>
+                <th style="width: 15%; text-align: center;">Page No.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center;">Figure 5.1</td>
+                <td>Context Level Diagram (CLD) of Library Management System</td>
+                <td style="text-align:center;">3</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Figure 5.2</td>
+                <td>Data Flow Diagram Level 0 (DFD Level 0)</td>
+                <td style="text-align:center;">3</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Figure 5.3</td>
+                <td>Unified System Use Case Diagram</td>
+                <td style="text-align:center;">3</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Figure 5.4</td>
+                <td>Entity–Relationship Diagram (ERD) with Multiplicity Constraints</td>
+                <td style="text-align:center;">3</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Figure 5.5</td>
+                <td>Complete Book Issue, Return & Overdue Fine Lifecycle Flowchart</td>
+                <td style="text-align:center;">3</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Figure 6.1</td>
+                <td>Layered Single-File Architecture & Class Relationship Diagram</td>
+                <td style="text-align:center;">4</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Figure 7.1</td>
+                <td>Stored vs. Derived Data Tracks & JSON Persistence Architecture</td>
+                <td style="text-align:center;">5</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Figure A.1</td>
+                <td>Main Terminal Menu & Command Selection Screen Wireframe</td>
+                <td style="text-align:center;">7</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">Figure A.2</td>
+                <td>Return Confirmation & Overdue Fine Calculation Output Wireframe</td>
+                <td style="text-align:center;">7</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="page-footer">v</div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         PAGE 8: LIST OF SYMBOLS & ABBREVIATIONS
+    ========================================================== -->
+    <div class="page">
+      <div class="page-border">
+        <div class="page-content">
+          <h2 style="font-size: 13pt; text-align: center; margin-bottom: 16px; text-transform: uppercase;">
+            LIST OF SYMBOLS, ABBREVIATIONS & NOMENCLATURE
+          </h2>
+
+          <table class="report-table left-align" style="font-size: 9.5pt;">
+            <thead>
+              <tr>
+                <th style="width: 25%; text-align: left;">Symbol / Abbreviation</th>
+                <th style="width: 75%; text-align: left;">Meaning / Definition</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>OOP</strong></td>
+                <td>Object-Oriented Programming (Encapsulation, Classes, Objects, Modular Separation)</td>
+              </tr>
+              <tr>
+                <td><strong>CLI</strong></td>
+                <td>Command-Line Interface (Terminal-driven interactive menu)</td>
+              </tr>
+              <tr>
+                <td><strong>JSON</strong></td>
+                <td>JavaScript Object Notation (Lightweight text format used to store records on disk)</td>
+              </tr>
+              <tr>
+                <td><strong>ISO 8601</strong></td>
+                <td>International date format YYYY-MM-DD used for issue, due, and return dates</td>
+              </tr>
+              <tr>
+                <td><strong>Regex</strong></td>
+                <td>Regular Expression (Pattern matching used to validate author names)</td>
+              </tr>
+              <tr>
+                <td><strong>PK / FK</strong></td>
+                <td>Primary Key / Foreign Key (Identifier fields that link records across entities)</td>
+              </tr>
+              <tr>
+                <td><strong>CRUD</strong></td>
+                <td>Create, Read, Update, Delete (Basic data record operations)</td>
+              </tr>
+              <tr>
+                <td><strong>DFD</strong></td>
+                <td>Data Flow Diagram (Graphical depiction of data movement through a system)</td>
+              </tr>
+              <tr>
+                <td><strong>ERD</strong></td>
+                <td>Entity–Relationship Diagram (Conceptual data model representation)</td>
+              </tr>
+              <tr>
+                <td><strong>WBS</strong></td>
+                <td>Work Breakdown Structure (Hierarchical task decomposition in planning)</td>
+              </tr>
+              <tr>
+                <td><strong>ASCII</strong></td>
+                <td>American Standard Code for Information Interchange (Text-based UI tables)</td>
+              </tr>
+              <tr>
+                <td><strong>FINE_PER_DAY</strong></td>
+                <td>Program constant that defines the overdue fine per day (₹5)</td>
+              </tr>
+              <tr>
+                <td><strong>I/O</strong></td>
+                <td>Input / Output (Console input and reading / writing of data files)</td>
+              </tr>
+              <tr>
+                <td><strong>ID</strong></td>
+                <td>Auto-generated identifier (B / S / T prefix followed by a yymmddHHMMSS timestamp)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="page-footer">vi</div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         BODY PAGE 1: CHAPTER 1 (INTRODUCTION) & CHAPTER 2 (OBJECTIVES)
+    ========================================================== -->
+    <div class="page">
+      <div class="page-border">
+        <div class="page-content">
+          <div class="chapter-heading">
+            <div class="chapter-num">CHAPTER 1</div>
+            <div class="chapter-title">INTRODUCTION</div>
+          </div>
+
+          <p>
+            Academic libraries form the intellectual nucleus of higher education institutions, serving hundreds of
+            students
+            and faculty members daily. In many college departments, circulation operations—such as catalog tracking,
+            book checkouts,
+            returns, and overdue fee collections—are still conducted through manual paper ledgers or obsolete monolithic
+            systems.
+            These legacy workflows suffer from severe record discrepancies, untracked inventory depletion, and delayed
+            financial
+            settlement of library dues.
+          </p>
+
+          <p>
+            The <strong>LIBRARY MANAGEMENT SYSTEM</strong> is engineered as a lightweight, terminal-driven
+            automation
+            tool built using <strong>Python Object-Oriented Programming (OOP)</strong> and
+            <strong>JSON file storage</strong>.
+            Operating in a continuous interactive menu loop, the application integrates catalog management, student
+            registration,
+            book issue and return, overdue fine calculation, searching, and library statistics into a single,
+            zero-dependency program.
+          </p>
+
+          <div class="section-title">Table 1.1: Library Management System Operational Capabilities & Scope Overview
+          </div>
+          <table class="report-table" style="font-size: 8.2pt; margin: 4px 0;">
+            <thead>
+              <tr>
+                <th style="width: 14%;">Module</th>
+                <th style="width: 24%;">Feature Scope</th>
+                <th style="width: 12%;">Underlying Entity</th>
+                <th style="width: 14%;">Module</th>
+                <th style="width: 24%;">Feature Scope</th>
+                <th style="width: 12%;">Underlying Entity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Catalog</code></td>
+                <td>Add books, merge duplicates, track copies</td>
+                <td><code>Book</code></td>
+                <td><code>Fines</code></td>
+                <td>Overdue days × ₹5 calculated at return</td>
+                <td><code>Fine Field</code></td>
+              </tr>
+              <tr>
+                <td><code>Members</code></td>
+                <td>Register students, unique email validation</td>
+                <td><code>Student</code></td>
+                <td><code>History</code></td>
+                <td>Transactions sorted by latest issue</td>
+                <td><code>Transaction</code></td>
+              </tr>
+              <tr>
+                <td><code>Circulation</code></td>
+                <td>Issue with due date, return by transaction ID</td>
+                <td><code>Transaction</code></td>
+                <td><code>Analytics</code></td>
+                <td>Totals, availability, top issued titles</td>
+                <td><code>Statistics</code></td>
+              </tr>
+            </tbody>
+          </table>
+          <p
+            style="font-size: 7.8pt; text-align: center; margin-top: -2px; margin-bottom: 5px; color: #475569; font-style: italic;">
+            * The due date is entered by the librarian at the time of issue (it cannot be in the past); the overdue
+            fine accrues at ₹5/day.
+          </p>
+
+          <p>
+            The system emphasizes <strong>data reliability and simple operation</strong>: every input is validated
+            before it is accepted, unique IDs are generated automatically and displayed to the user, all lookups
+            are case-insensitive, and records are written to the <code>data/</code> folder immediately after every
+            change, so no information is lost between sessions.
+          </p>
+
+          <!-- CHAPTER 2 STARTS IN CENTER OF PAGE 1 -->
+          <div class="chapter-heading" style="margin-top: 10px;">
+            <div class="chapter-num">CHAPTER 2</div>
+            <div class="chapter-title">OBJECTIVES</div>
+          </div>
+
+          <p>
+            The project was designed to satisfy key educational and operational objectives, bridging clean software
+            design principles
+            with real-world practical utility:
+          </p>
+
+          <div class="section-title">2.1 Primary Objective</div>
+          <p>
+            To design, implement, and test a terminal-based library management program in Python using
+            Object-Oriented Programming, loops, conditional branching, regular expressions, date handling, JSON file
+            persistence, and exception handling.
+          </p>
+
+          <div class="section-title">2.2 Functional & Technical Objectives</div>
+          <p style="font-size: 9.8pt; line-height: 1.4;">
+            • <strong>OOP Modeling:</strong> Construct encapsulated domain classes (<code>Book</code>,
+            <code>Student</code>, and <code>Library</code>) with a clear separation between data records, business
+            rules, and console interaction.<br>
+            • <strong>Reliable Data Persistence:</strong> Store books, students, and transactions in JSON files that
+            are loaded at startup and saved after every change.<br>
+            • <strong>Accurate Availability Tracking:</strong> Calculate available copies from active issue records
+            so that stock counts can never drift out of sync.<br>
+            • <strong>Automated Fine Calculation:</strong> Compute overdue days on return and charge ₹5/day
+            (<code>FINE_PER_DAY</code>), recording the fine in the transaction.<br>
+            • <strong>Input Validation &amp; Fault Tolerance:</strong> Validate names, emails, quantities, and dates,
+            and handle missing or corrupted data files without crashing.
+          </p>
+        </div>
+
+        <div class="page-footer">1</div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         BODY PAGE 2: CHAPTER 3 (METHODOLOGY) & CHAPTER 4 (REQUIREMENTS)
+    ========================================================== -->
+    <div class="page">
+      <div class="page-border">
+        <div class="page-content">
+          <div class="chapter-heading">
+            <div class="chapter-num">CHAPTER 3</div>
+            <div class="chapter-title">PLANNING & METHODOLOGY</div>
+          </div>
+
+          <p>
+            The software was built using an <strong>iterative incremental development lifecycle</strong>, prioritizing
+            modular component
+            design, early working versions of each feature, and continuous manual verification after every increment.
+          </p>
+
+          <div class="section-title">3.1 Work Breakdown Structure (WBS)</div>
+          <table class="report-table" style="font-size: 8.2pt; margin: 4px 0;">
+            <thead>
+              <tr>
+                <th style="width: 12%;">WBS Code</th>
+                <th style="width: 28%;">Project Phase</th>
+                <th style="width: 45%;">Core Deliverables</th>
+                <th style="width: 15%;">Timeline</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1.0</td>
+                <td>Domain Modeling & Data Files</td>
+                <td>Entity classes (Book, Student), JSON data files, load and save routines</td>
+                <td>Week 1–2</td>
+              </tr>
+              <tr>
+                <td>2.0</td>
+                <td>Library Service & Circulation</td>
+                <td>Library class, issue and return methods, available-copies calculation</td>
+                <td>Week 3–4</td>
+              </tr>
+              <tr>
+                <td>3.0</td>
+                <td>Overdue Fine Calculation</td>
+                <td>Date arithmetic, FINE_PER_DAY rule, fine stored in the transaction record</td>
+                <td>Week 5–6</td>
+              </tr>
+              <tr>
+                <td>4.0</td>
+                <td>Console Menu & Displays</td>
+                <td>Aligned ASCII tables, search, 11-option main menu loop</td>
+                <td>Week 7–8</td>
+              </tr>
+              <tr>
+                <td>5.0</td>
+                <td>Validation & Error Handling</td>
+                <td>Regex author check, date and quantity parsing, safe file loading</td>
+                <td>Week 9–10</td>
+              </tr>
+              <tr>
+                <td>6.0</td>
+                <td>Testing & Documentation</td>
+                <td>Manual functional testing, edge cases, project report</td>
+                <td>Week 11–12</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="section-title">3.2 Risk Mitigation & Quality Planning</div>
+          <p style="font-size: 9.6pt; line-height: 1.4;">
+            <strong>Risk 1: Inventory Mismatch:</strong> Mitigated by never storing an available-copies counter;
+            <code>available_copies()</code> derives it from the number of active <code>Issued</code> transactions
+            and issuing is blocked when fewer than one copy remains.<br>
+            <strong>Risk 2: Missing or Corrupted Data Files:</strong> Solved through <code>load_data()</code>, which
+            creates missing files, catches <code>JSONDecodeError</code> and <code>OSError</code>, and starts with an
+            empty list instead of crashing.<br>
+            <strong>Risk 3: Invalid User Input:</strong> Addressed by validating every input (regular expression,
+            integer and date parsing) and wrapping each menu action in a <code>try-except</code> block inside
+            <code>main()</code>.
+          </p>
+
+          <!-- CHAPTER 4 STARTS IN CENTER OF PAGE 2 -->
+          <div class="chapter-heading" style="margin-top: 10px;">
+            <div class="chapter-num">CHAPTER 4</div>
+            <div class="chapter-title">REQUIREMENT ANALYSIS</div>
+          </div>
+
+          <p>
+            System requirements were categorized into functional operations and non-functional engineering standards:
+          </p>
+
+          <div class="section-title">Table 4.1: System Functional Requirements Specification</div>
+          <table class="report-table left-align" style="font-size: 8pt; margin: 4px 0;">
+            <thead>
+              <tr>
+                <th style="width: 14%; text-align:center;">Req. ID</th>
+                <th style="width: 28%;">Feature Module</th>
+                <th style="width: 58%;">Functional Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center;">FR-01</td>
+                <td>Catalog Management</td>
+                <td>Add books with a positive number of copies, merge duplicate title–author entries, and display all or only available books.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">FR-02</td>
+                <td>Member Registration</td>
+                <td>Register students with a non-blank name and a unique, valid-looking email; list all registered students.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">FR-03</td>
+                <td>Book Issue</td>
+                <td>Validate book and student IDs (case-insensitive), check that a copy is available, accept a due date that is not in the past, and create an <code>Issued</code> transaction.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">FR-04</td>
+                <td>Return & Overdue Fine</td>
+                <td>Return a book by transaction ID, count the days late against the due date, and record a fine of ₹5 per overdue day.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">FR-05</td>
+                <td>Transaction History</td>
+                <td>List all issue records, newest first, with due date, status, and fine amount.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">FR-06</td>
+                <td>Search & Display</td>
+                <td>Search by ID, title, or author (partial, case-insensitive) and show total and available copies in aligned tables.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">FR-07</td>
+                <td>Analytics & Statistics</td>
+                <td>Compute title count, total and available copies, currently issued copies, registered students, and the top five most issued books.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="section-title">Table 4.2: System Non-Functional Requirements & Performance Metrics</div>
+          <table class="report-table" style="font-size: 8pt; margin: 4px 0;">
+            <thead>
+              <tr>
+                <th style="width: 25%;">Attribute</th>
+                <th style="width: 35%;">Target Specification</th>
+                <th style="width: 40%;">Implementation Mechanism</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Data Persistence</td>
+                <td>Records survive program restarts</td>
+                <td>JSON files in <code>data/</code> written by <code>save_all()</code> after every change</td>
+              </tr>
+              <tr>
+                <td>Zero Dependencies</td>
+                <td>Pure Python 3 standard library</td>
+                <td>Uses built-in <code>json</code>, <code>os</code>, <code>re</code>, and <code>datetime</code></td>
+              </tr>
+              <tr>
+                <td>Fault Tolerance</td>
+                <td>No unhandled crash on bad input or bad files</td>
+                <td>Input validation, safe <code>load_data()</code>, and <code>try-except</code> in the menu loop</td>
+              </tr>
+              <tr>
+                <td>Usability</td>
+                <td>Simple, self-explanatory interaction</td>
+                <td>Numbered 11-option menu, aligned tables, and clear success / error messages</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="page-footer">2</div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         BODY PAGE 3: CHAPTER 5 - SYSTEM FLOW & ARCHITECTURAL DIAGRAMS
+    ========================================================== -->
+    <div class="page">
+      <div class="page-border">
+        <div class="page-content">
+          <div class="chapter-heading">
+            <div class="chapter-num">CHAPTER 5</div>
+            <div class="chapter-title">SYSTEM FLOW & ARCHITECTURAL DIAGRAMS</div>
+          </div>
+
+          <p style="margin-bottom: 4px;">
+            The architectural models below illustrate the data flow, interactions, data structures, and execution
+            lifecycles of the Library Management System:
+          </p>
+
+          <!-- 5.1 Context Level Diagram & DFD Level 0 -->
+          <div class="section-title">5.1 System Context & Data Flow (CLD & DFD Level 0)</div>
+          <div class="figure-container" style="margin: 3px 0;">
+            <svg viewBox="0 0 540 64" width="540" height="64">
+              <rect x="10" y="12" width="80" height="38" rx="4" fill="#e0e7ff" stroke="#4338ca" stroke-width="1.2" />
+              <text x="50" y="28" font-size="8.5" font-weight="bold" text-anchor="middle"
+                font-family="sans-serif">Operator /</text>
+              <text x="50" y="41" font-size="8.5" font-weight="bold" text-anchor="middle"
+                font-family="sans-serif">Librarian</text>
+
+              <line x1="90" y1="24" x2="190" y2="24" stroke="#000" stroke-width="1" />
+              <text x="140" y="19" font-size="6.5" text-anchor="middle" font-family="sans-serif">Commands / Selections
+                &gt;&gt;</text>
+
+              <line x1="190" y1="40" x2="90" y2="40" stroke="#000" stroke-width="1" />
+              <text x="140" y="50" font-size="6.5" text-anchor="middle" font-family="sans-serif">&lt;&lt; Tables,
+                Receipts &amp; Stats</text>
+
+              <rect x="190" y="8" width="160" height="46" rx="6" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5" />
+              <text x="270" y="27" font-size="9.5" font-weight="bold" text-anchor="middle"
+                font-family="sans-serif">LIBRARY SYSTEM CLI</text>
+              <text x="270" y="41" font-size="7.5" text-anchor="middle" font-family="sans-serif">Core Application Engine
+                (0.0)</text>
+
+              <line x1="350" y1="24" x2="445" y2="24" stroke="#000" stroke-width="1" />
+              <text x="397" y="19" font-size="6.5" text-anchor="middle" font-family="sans-serif">Read / Write JSON &gt;&gt;</text>
+
+              <line x1="445" y1="40" x2="350" y2="40" stroke="#000" stroke-width="1" />
+              <text x="397" y="50" font-size="6.5" text-anchor="middle" font-family="sans-serif">&lt;&lt; Loaded Records</text>
+
+              <rect x="445" y="12" width="85" height="38" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1.2" />
+              <text x="487" y="29" font-size="8.5" font-weight="bold" text-anchor="middle" font-family="sans-serif">JSON Files</text>
+              <text x="487" y="41" font-size="7" text-anchor="middle" font-family="sans-serif">data/*.json (Disk)</text>
+            </svg>
+            <div class="figure-caption">Figure 5.1: Context Level Diagram (CLD) of Library System</div>
+          </div>
+
+          <div class="figure-container" style="margin: 3px 0;">
+            <svg viewBox="0 0 540 64" width="540" height="64">
+              <rect x="8" y="18" width="65" height="28" rx="3" fill="#e0e7ff" stroke="#3730a3" stroke-width="1" />
+              <text x="40" y="35" font-size="8" font-weight="bold" text-anchor="middle"
+                font-family="sans-serif">Librarian</text>
+
+              <circle cx="125" cy="32" r="18" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2" />
+              <text x="125" y="30" font-size="6" font-weight="bold" text-anchor="middle" font-family="sans-serif">1.0
+                Catalog</text>
+              <text x="125" y="39" font-size="5.5" text-anchor="middle" font-family="sans-serif">&amp; Members</text>
+
+              <circle cx="245" cy="32" r="18" fill="#ecfdf5" stroke="#059669" stroke-width="1.2" />
+              <text x="245" y="30" font-size="6" font-weight="bold" text-anchor="middle" font-family="sans-serif">2.0
+                Issue &amp;</text>
+              <text x="245" y="39" font-size="5.5" text-anchor="middle" font-family="sans-serif">Return</text>
+
+              <circle cx="365" cy="32" r="18" fill="#fef2f2" stroke="#dc2626" stroke-width="1.2" />
+              <text x="365" y="30" font-size="6" font-weight="bold" text-anchor="middle" font-family="sans-serif">3.0
+                Overdue</text>
+              <text x="365" y="39" font-size="5.5" text-anchor="middle" font-family="sans-serif">&amp; Fine Calc</text>
+
+              <rect x="445" y="6" width="85" height="15" rx="2" fill="#fff" stroke="#000" stroke-width="0.8" />
+              <text x="487" y="17" font-size="6" text-anchor="middle" font-family="sans-serif">D1: books.json</text>
+
+              <rect x="445" y="24" width="85" height="15" rx="2" fill="#fff" stroke="#000" stroke-width="0.8" />
+              <text x="487" y="35" font-size="6" text-anchor="middle" font-family="sans-serif">D2: students.json</text>
+
+              <rect x="445" y="42" width="85" height="15" rx="2" fill="#fff" stroke="#000" stroke-width="0.8" />
+              <text x="487" y="53" font-size="6" text-anchor="middle" font-family="sans-serif">D3: transactions.json</text>
+
+              <line x1="73" y1="32" x2="107" y2="32" stroke="#000" stroke-width="0.8" />
+              <line x1="143" y1="32" x2="227" y2="32" stroke="#000" stroke-width="0.8" />
+              <line x1="263" y1="32" x2="347" y2="32" stroke="#000" stroke-width="0.8" />
+              <line x1="140" y1="18" x2="445" y2="13" stroke="#666" stroke-width="0.8" stroke-dasharray="2,2" />
+              <line x1="140" y1="26" x2="445" y2="31" stroke="#666" stroke-width="0.8" stroke-dasharray="2,2" />
+              <line x1="383" y1="38" x2="445" y2="49" stroke="#666" stroke-width="0.8" stroke-dasharray="2,2" />
+            </svg>
+            <div class="figure-caption">Figure 5.2: Data Flow Diagram Level 0 (DFD Level 0)</div>
+          </div>
+
+          <!-- 5.2 Use Case & ER Models -->
+          <div class="section-title">5.2 Use Case & Entity–Relationship Models</div>
+          <div style="display: flex; gap: 8px; justify-content: space-between; margin: 3px 0;">
+            <div style="flex: 1; text-align: center;">
+              <svg viewBox="0 0 260 84" width="260" height="84">
+                <rect x="65" y="4" width="190" height="76" rx="4" fill="#f8fafc" stroke="#64748b" stroke-width="0.8" />
+                <text x="160" y="14" font-size="7" font-weight="bold" text-anchor="middle"
+                  font-family="sans-serif">System Boundary</text>
+                <!-- Actor -->
+                <circle cx="30" cy="32" r="8" fill="#cbd5e1" stroke="#334155" stroke-width="1.2" />
+                <line x1="30" y1="40" x2="30" y2="60" stroke="#334155" stroke-width="1.5" />
+                <line x1="15" y1="48" x2="45" y2="48" stroke="#334155" stroke-width="1.5" />
+                <line x1="30" y1="60" x2="18" y2="76" stroke="#334155" stroke-width="1.5" />
+                <line x1="30" y1="60" x2="42" y2="76" stroke="#334155" stroke-width="1.5" />
+                <text x="30" y="82" font-size="6.5" font-weight="bold" text-anchor="middle"
+                  font-family="sans-serif">Operator</text>
+                <!-- Bubbles -->
+                <ellipse cx="115" cy="27" rx="38" ry="8" fill="#fff" stroke="#2563eb" stroke-width="0.8" />
+                <text x="115" y="30" font-size="5.8" text-anchor="middle" font-family="sans-serif">Manage Books &amp;
+                  Users</text>
+                <ellipse cx="115" cy="51" rx="38" ry="8" fill="#fff" stroke="#2563eb" stroke-width="0.8" />
+                <text x="115" y="54" font-size="5.8" text-anchor="middle" font-family="sans-serif">Issue / Return
+                  Book</text>
+                <ellipse cx="205" cy="27" rx="42" ry="8" fill="#fff" stroke="#2563eb" stroke-width="0.8" />
+                <text x="205" y="30" font-size="5.8" text-anchor="middle" font-family="sans-serif">Search &amp; View Records</text>
+                <ellipse cx="205" cy="51" rx="42" ry="8" fill="#fff" stroke="#2563eb" stroke-width="0.8" />
+                <text x="205" y="54" font-size="5.8" text-anchor="middle" font-family="sans-serif">View Fines &amp; Statistics</text>
+                <line x1="42" y1="44" x2="77" y2="27" stroke="#475569" stroke-width="0.8" />
+                <line x1="42" y1="44" x2="77" y2="51" stroke="#475569" stroke-width="0.8" />
+              </svg>
+              <div class="figure-caption">Figure 5.3: Unified System Use Case Diagram</div>
+            </div>
+            <div style="flex: 1; text-align: center;">
+              <svg viewBox="0 0 260 84" width="260" height="84">
+                <rect x="5" y="8" width="70" height="66" fill="#fff" stroke="#000" stroke-width="1" />
+                <text x="40" y="19" font-size="7" font-weight="bold" text-anchor="middle"
+                  font-family="sans-serif">BOOK</text>
+                <line x1="5" y1="23" x2="75" y2="23" stroke="#000" stroke-width="0.8" />
+                <text x="10" y="32" font-size="5.8" font-family="sans-serif">PK: id</text>
+                <text x="10" y="41" font-size="5.8" font-family="sans-serif">title, author</text>
+                <text x="10" y="50" font-size="5.8" font-family="sans-serif">quantity (total)</text>
+                <text x="10" y="59" font-size="5.8" font-family="sans-serif">available (derived)</text>
+
+                <polygon points="95,41 115,29 135,41 115,53" fill="#fff" stroke="#000" stroke-width="0.8" />
+                <text x="115" y="43" font-size="6" text-anchor="middle" font-family="sans-serif">Loaned</text>
+                <line x1="75" y1="41" x2="95" y2="41" stroke="#000" stroke-width="0.8" />
+                <line x1="135" y1="41" x2="160" y2="41" stroke="#000" stroke-width="0.8" />
+
+                <rect x="160" y="4" width="95" height="74" fill="#fff" stroke="#000" stroke-width="1" />
+                <text x="207" y="15" font-size="7" font-weight="bold" text-anchor="middle"
+                  font-family="sans-serif">TRANSACTION</text>
+                <line x1="160" y1="19" x2="255" y2="19" stroke="#000" stroke-width="0.8" />
+                <text x="165" y="28" font-size="5.8" font-family="sans-serif">PK: id</text>
+                <text x="165" y="37" font-size="5.8" font-family="sans-serif">FK: book_id, student_id</text>
+                <text x="165" y="46" font-size="5.8" font-family="sans-serif">issued_on, due_date</text>
+                <text x="165" y="55" font-size="5.8" font-family="sans-serif">returned_on, fine</text>
+                <text x="165" y="64" font-size="5.8" font-family="sans-serif">status (Issued/Returned)</text>
+              </svg>
+              <div class="figure-caption">Figure 5.4: Entity–Relationship Diagram (ERD)</div>
+            </div>
+          </div>
+
+          <!-- 5.3 Complete Flowchart -->
+          <div class="section-title">5.3 Circulation & Overdue Fine Lifecycle Flowchart</div>
+          <div class="figure-container" style="margin: 3px 0;">
+            <svg viewBox="0 0 540 108" width="540" height="108">
+              <ellipse cx="60" cy="18" rx="35" ry="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+              <text x="60" y="21" font-size="7" font-weight="bold" text-anchor="middle" font-family="sans-serif">Select
+                Action</text>
+              <line x1="95" y1="18" x2="140" y2="18" stroke="#000" stroke-width="1" />
+
+              <polygon points="175,7 210,18 175,29 140,18" fill="#fef3c7" stroke="#d97706" stroke-width="1" />
+              <text x="175" y="20" font-size="6" text-anchor="middle" font-family="sans-serif">Issue / Return?</text>
+              <line x1="210" y1="18" x2="260" y2="18" stroke="#000" stroke-width="1" />
+              <text x="235" y="14" font-size="6" font-family="sans-serif">Issue</text>
+
+              <rect x="260" y="9" width="115" height="18" rx="3" fill="#e0e7ff" stroke="#4338ca" stroke-width="1" />
+              <text x="317" y="21" font-size="6.2" text-anchor="middle" font-family="sans-serif">Validate Book &amp; Student</text>
+              <line x1="375" y1="18" x2="415" y2="18" stroke="#000" stroke-width="1" />
+
+              <rect x="415" y="9" width="115" height="18" rx="3" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1" />
+              <text x="472" y="21" font-size="6.2" text-anchor="middle" font-family="sans-serif">Check Stock &amp; Save Txn</text>
+
+              <line x1="175" y1="29" x2="175" y2="50" stroke="#000" stroke-width="1" />
+              <text x="180" y="42" font-size="6" font-family="sans-serif">Return</text>
+
+              <rect x="110" y="50" width="130" height="18" rx="3" fill="#fff" stroke="#000" stroke-width="1" />
+              <text x="175" y="62" font-size="6.2" text-anchor="middle" font-family="sans-serif">Enter Transaction ID</text>
+
+              <line x1="240" y1="59" x2="280" y2="59" stroke="#000" stroke-width="1" />
+              <polygon points="315,48 350,59 315,70 280,59" fill="#fef3c7" stroke="#d97706" stroke-width="1" />
+              <text x="315" y="61" font-size="6" text-anchor="middle" font-family="sans-serif">Days Late &gt; 0?</text>
+
+              <line x1="350" y1="59" x2="400" y2="59" stroke="#000" stroke-width="1" />
+              <text x="370" y="55" font-size="6" font-family="sans-serif">Yes (Fine)</text>
+
+              <rect x="400" y="50" width="130" height="18" rx="3" fill="#fee2e2" stroke="#dc2626" stroke-width="1" />
+              <text x="465" y="62" font-size="6" text-anchor="middle" font-family="sans-serif">Fine = Days Late × Rs. 5</text>
+
+              <line x1="465" y1="68" x2="465" y2="82" stroke="#000" stroke-width="1" />
+              <rect x="65" y="82" width="410" height="17" rx="3" fill="#ecfdf5" stroke="#059669" stroke-width="1" />
+              <text x="270" y="94" font-size="6.8" font-weight="bold" text-anchor="middle" font-family="sans-serif">Set Status 'Returned' • Save Return Date &amp; Fine • Update JSON Files</text>
+            </svg>
+            <div class="figure-caption">Figure 5.5: Complete Book Issue, Return &amp; Overdue Fine Lifecycle Flowchart
+            </div>
+          </div>
+        </div>
+
+        <div class="page-footer">3</div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         BODY PAGE 4: CHAPTER 6 (DESIGN) & CHAPTER 7 (WORKFLOW)
+    ========================================================== -->
+    <div class="page">
+      <div class="page-border">
+        <div class="page-content">
+          <div class="chapter-heading">
+            <div class="chapter-num">CHAPTER 6</div>
+            <div class="chapter-title">PROPOSED DESIGN & CLASS ARCHITECTURE</div>
+          </div>
+
+          <p>
+            The software is organized into clear logical layers inside the single file <code>main.py</code>, keeping
+            presentation, business rules, domain entities, and data storage separate.
+          </p>
+
+          <div class="section-title">6.1 Layered Single-File OOP Architecture</div>
+          <div class="figure-container" style="margin: 3px 0;">
+            <svg viewBox="0 0 540 76" width="540" height="76">
+              <rect x="15" y="5" width="510" height="18" rx="3" fill="#1e293b" />
+              <text x="270" y="17" font-size="7.5" font-weight="bold" fill="#fff" text-anchor="middle" font-family="sans-serif">PRESENTATION TIER: main() Menu Loop (Console Menu, Aligned ASCII Tables, Input Prompts)</text>
+
+              <line x1="270" y1="23" x2="270" y2="30" stroke="#000" stroke-width="1" />
+              <rect x="15" y="30" width="510" height="18" rx="3" fill="#2563eb" />
+              <text x="270" y="42" font-size="7.5" font-weight="bold" fill="#fff" text-anchor="middle" font-family="sans-serif">BUSINESS LOGIC TIER: Book, Student &amp; Library Classes (Issue, Return, Fine Rules)</text>
+
+              <line x1="270" y1="48" x2="270" y2="55" stroke="#000" stroke-width="1" />
+              <rect x="15" y="55" width="510" height="18" rx="3" fill="#059669" />
+              <text x="270" y="67" font-size="7.5" font-weight="bold" fill="#fff" text-anchor="middle" font-family="sans-serif">PERSISTENCE TIER: load_data() / save_data() (JSON Files in data/ Folder)</text>
+            </svg>
+            <div class="figure-caption">Figure 6.1: Layered Single-File Architecture &amp; Class Relationship Diagram
+            </div>
+          </div>
+
+          <div class="section-title">6.2 Console Interface &amp; Input Validation</div>
+          <p>
+            Every interaction takes place through a numbered menu of eleven options (0–10). Book listings are shown
+            in aligned columns for <em>ID</em>, <em>Title</em>, <em>Author</em>, <em>Total</em>, and
+            <em>Available</em> copies, so the librarian can read the required book ID directly from the screen before
+            issuing. Student IDs appear in the student list, and transaction IDs are displayed after every issue and
+            in the transaction history. All ID lookups are case-insensitive, and every prompt reports a clear message
+            when the input is invalid.
+          </p>
+
+          <!-- CHAPTER 7 STARTS IN CENTER OF PAGE 4 -->
+          <div class="chapter-heading" style="margin-top: 10px;">
+            <div class="chapter-num">CHAPTER 7</div>
+            <div class="chapter-title">SYSTEM MECHANISM, WORKFLOW & DATA HANDLING</div>
+          </div>
+
+          <div class="section-title">7.1 End-to-End System Workflow (How the Application Works)</div>
+          <p>
+            The continuous execution cycle within <code>main.py</code> operates through eight sequential stages:
+          </p>
+
+          <table class="report-table left-align" style="font-size: 7.8pt; margin: 4px 0;">
+            <thead>
+              <tr>
+                <th style="width: 8%; text-align: center;">Step</th>
+                <th style="width: 25%;">Workflow Phase</th>
+                <th style="width: 67%;">Underlying System Operations & Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align: center;"><strong>1</strong></td>
+                <td><strong>Initialization</strong></td>
+                <td><code>main()</code> creates the <code>Library</code> object; its constructor creates the <code>data/</code> folder and loads the books, students, and transactions JSON files (creating empty files if missing).</td>
+              </tr>
+              <tr>
+                <td style="text-align: center;"><strong>2</strong></td>
+                <td><strong>Menu Dispatching</strong></td>
+                <td>Displays 11 choices (0–10). The input is stripped and mapped to <code>Library</code> methods through an action dictionary; invalid choices show a message.</td>
+              </tr>
+              <tr>
+                <td style="text-align: center;"><strong>3</strong></td>
+                <td><strong>Inventory Ingestion</strong></td>
+                <td>Option [1] prompts for Title, Author (letters and spaces only), and Copies (&ge; 1); a matching title and author increases the quantity, otherwise a new book with ID <code>B</code> + timestamp is saved.</td>
+              </tr>
+              <tr>
+                <td style="text-align: center;"><strong>4</strong></td>
+                <td><strong>Member Registration</strong></td>
+                <td>Option [5] registers students with a non-blank name and a unique email containing “@”, storing them with ID <code>S</code> + timestamp.</td>
+              </tr>
+              <tr>
+                <td style="text-align: center;"><strong>5</strong></td>
+                <td><strong>Book Issue</strong></td>
+                <td>Option [7] validates book and student IDs and availability (copies &ge; 1), reads a due date (YYYY-MM-DD, not in the past), and appends an <code>Issued</code> transaction with ID <code>T</code> + timestamp.</td>
+              </tr>
+              <tr>
+                <td style="text-align: center;"><strong>6</strong></td>
+                <td><strong>Return & Overdue Fine</strong></td>
+                <td>Option [8] takes the transaction ID, calculates overdue days against the due date, sets the fine (₹5/day), and marks the transaction <code>Returned</code>.</td>
+              </tr>
+              <tr>
+                <td style="text-align: center;"><strong>7</strong></td>
+                <td><strong>Display & Search</strong></td>
+                <td>Options [2]–[4], [6], and [9] show all books, available books, search results, registered students, and the transaction history (newest first).</td>
+              </tr>
+              <tr>
+                <td style="text-align: center;"><strong>8</strong></td>
+                <td><strong>Statistics & Exit</strong></td>
+                <td>Option [10] reports totals, available and issued copies, student count, and the top five issued titles; option [0] saves all records and exits.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="page-footer">4</div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         BODY PAGE 5: CHAPTER 7 (LOGIC/DATA CONTD.) & CHAPTER 8 (CHALLENGES)
+    ========================================================== -->
+    <div class="page">
+      <div class="page-border">
+        <div class="page-content">
+          <div class="section-title">7.2 Core Circulation Engine & Fine Calculation</div>
+          <p>
+            The circulation engine executes simple, deterministic logic. When a transaction is returned, the
+            <code>Library.return_book()</code> method compares the recorded due date with the actual return
+            date:
+          </p>
+          <p
+            style="margin-left: 6px; font-family: monospace; font-size: 7.8pt; background: #f8fafc; padding: 4px 6px; border-left: 3px solid #2563eb; line-height: 1.35; margin-bottom: 5px;">
+            Overdue Days = max(0, (Return Date - Due Date).days)<br>
+            Fine = Overdue Days × FINE_PER_DAY (₹5)<br>
+            Status = "Returned"
+          </p>
+          <p>
+            The calculated fine, the return date, and the new status are written into the transaction record, and
+            the overdue days and fine amount are displayed on screen. Because available copies are computed as
+            <code>quantity − issued transactions</code>, marking a transaction as <code>Returned</code>
+            automatically makes the copy available again.
+          </p>
+
+          <div class="section-title">7.3 JSON Persistence & Derived Availability Tracking</div>
+          <p>
+            The system keeps a clear separation between data that is stored on disk and values that are computed on
+            demand:
+          </p>
+
+          <div class="figure-container" style="margin: 3px 0;">
+            <svg viewBox="0 0 540 62" width="540" height="62">
+              <rect x="5" y="4" width="530" height="54" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="0.8" />
+              <!-- Track 1 -->
+              <rect x="15" y="8" width="245" height="44" rx="3" fill="#eff6ff" stroke="#3b82f6" stroke-width="0.8" />
+              <text x="137" y="20" font-size="7.2" font-weight="bold" fill="#1e3a8a" text-anchor="middle">TRACK 1: Stored Records (JSON Files)</text>
+              <text x="25" y="32" font-size="6.2" fill="#1e293b">• books.json, students.json, transactions.json</text>
+              <text x="25" y="43" font-size="6.2" fill="#1e293b">• save_all() writes them after every change</text>
+
+              <!-- Track 2 -->
+              <rect x="280" y="8" width="245" height="44" rx="3" fill="#f0fdf4" stroke="#22c55e" stroke-width="0.8" />
+              <text x="402" y="20" font-size="7.2" font-weight="bold" fill="#14532d" text-anchor="middle">TRACK 2: Derived Values (Computed)</text>
+              <text x="290" y="32" font-size="6.2" fill="#1e293b">• Available copies = quantity − Issued transactions</text>
+              <text x="290" y="43" font-size="6.2" fill="#1e293b">• Fines &amp; statistics computed from records</text>
+            </svg>
+            <div class="figure-caption">Figure 7.1: Stored vs. Derived Data Tracks &amp; JSON Persistence Architecture
+            </div>
+          </div>
+
+          <!-- CHAPTER 8 STARTS IN CENTER OF PAGE 5 -->
+          <div class="chapter-heading" style="margin-top: 10px;">
+            <div class="chapter-num">CHAPTER 8</div>
+            <div class="chapter-title">CHALLENGES & PROBLEMS FACED DURING DEVELOPMENT</div>
+          </div>
+
+          <p style="margin-bottom: 4px;">
+            Engineering a dependable terminal software environment required resolving several key technical challenges:
+          </p>
+
+          <div class="section-title">8.1 Keeping Book Availability Consistent</div>
+          <p style="margin-bottom: 4px;">
+            <strong>Problem:</strong> Storing an “available copies” counter beside the total quantity could drift out
+            of sync with the actual issue records after edits or interrupted runs.<br>
+            <strong>Solution:</strong> Availability is never stored; <code>available_copies()</code> calculates it as
+            the total quantity minus the number of <code>Issued</code> transactions for that book.
+          </p>
+
+          <div class="section-title">8.2 Overdue Calculation Boundary Edge Cases</div>
+          <p style="margin-bottom: 4px;">
+            <strong>Problem:</strong> Returning a book early or exactly on the due date produces a zero or negative
+            date difference, which must never create a fine.<br>
+            <strong>Solution:</strong> Dates are stored in ISO format and converted with
+            <code>date.fromisoformat()</code>; the overdue days are clamped using <code>max(0, ...)</code> so only
+            late returns are charged.
+          </p>
+
+          <div class="section-title">8.3 Missing or Corrupted Data Files</div>
+          <p style="margin-bottom: 4px;">
+            <strong>Problem:</strong> On the first run the JSON files do not exist, and a damaged file would normally
+            crash the program with a decoding error.<br>
+            <strong>Solution:</strong> <code>load_data()</code> creates empty files when they are missing, catches
+            <code>JSONDecodeError</code> and <code>OSError</code>, prints a warning, and continues with an empty
+            list.
+          </p>
+
+          <div class="section-title">8.4 Unique IDs and Input Validation</div>
+          <p style="margin-bottom: 4px;">
+            <strong>Problem:</strong> Without a database, unique IDs had to be generated by the program, and
+            incorrect inputs (such as numbers in author names or invalid dates) could corrupt records.<br>
+            <strong>Solution:</strong> IDs are built from a prefix and a timestamp (<code>B</code>, <code>S</code>,
+            <code>T</code> + <code>yymmddHHMMSS</code>), author names are checked with a regular expression, and
+            dates and quantities are parsed inside <code>try-except</code> blocks.
+          </p>
+        </div>
+
+        <div class="page-footer">5</div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         BODY PAGE 6: CHAPTER 9 (TESTING) & CHAPTER 10 (CONCLUSION)
+    ========================================================== -->
+    <div class="page">
+      <div class="page-border">
+        <div class="page-content">
+          <div class="chapter-heading">
+            <div class="chapter-num">CHAPTER 9</div>
+            <div class="chapter-title">EXPERIMENTAL RESULTS & TESTING</div>
+          </div>
+
+          <p>
+            The application was validated through <strong>manual functional testing</strong> of every menu option,
+            using valid, invalid, and boundary inputs across 7 focused test areas:
+          </p>
+
+          <div class="section-title">Table 9.1: Module-Wise Functional Testing Outcomes (Manual Tests)</div>
+          <table class="report-table left-align" style="font-size: 8pt; margin: 4px 0;">
+            <thead>
+              <tr>
+                <th style="width: 25%;">Test Area</th>
+                <th style="width: 35%;">Test Scenarios Covered</th>
+                <th style="width: 25%;">Expected Result</th>
+                <th style="width: 15%; text-align:center;">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Book Management</strong></td>
+                <td>Valid add, blank title / author, non-letter author, zero or non-numeric copies, duplicate title merge.</td>
+                <td>Correct record created or clear error shown; duplicate increases quantity.</td>
+                <td style="text-align:center; color:green; font-weight:bold;">PASS</td>
+              </tr>
+              <tr>
+                <td><strong>Student Registration</strong></td>
+                <td>Valid registration, email without “@”, duplicate email in a different letter case.</td>
+                <td>Invalid and duplicate entries rejected.</td>
+                <td style="text-align:center; color:green; font-weight:bold;">PASS</td>
+              </tr>
+              <tr>
+                <td><strong>Book Issue</strong></td>
+                <td>Valid issue, wrong book / student ID, no copies left, past due date, wrong date format.</td>
+                <td>Issue blocked with a message; valid issue creates a transaction.</td>
+                <td style="text-align:center; color:green; font-weight:bold;">PASS</td>
+              </tr>
+              <tr>
+                <td><strong>Return & Fine</strong></td>
+                <td>On-time return, late return, unknown transaction ID, repeated return.</td>
+                <td>Fine = days late × ₹5; repeated return rejected.</td>
+                <td style="text-align:center; color:green; font-weight:bold;">PASS</td>
+              </tr>
+              <tr>
+                <td><strong>Search & Display</strong></td>
+                <td>Partial ID / title / author search, no match, available-only listing.</td>
+                <td>Correct matches; “No matching books found.” when empty.</td>
+                <td style="text-align:center; color:green; font-weight:bold;">PASS</td>
+              </tr>
+              <tr>
+                <td><strong>Data Persistence</strong></td>
+                <td>Restart after changes, missing data files, corrupted JSON file.</td>
+                <td>Records reloaded; empty list and warning on a bad file.</td>
+                <td style="text-align:center; color:green; font-weight:bold;">PASS</td>
+              </tr>
+              <tr>
+                <td><strong>Statistics</strong></td>
+                <td>Empty system, and after several issues and returns.</td>
+                <td>Correct totals and top-five ranking.</td>
+                <td style="text-align:center; color:green; font-weight:bold;">PASS</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="section-title">9.2 Observations &amp; Performance</div>
+          <p style="font-size: 9.6pt; line-height: 1.4;">
+            • <strong>Responsiveness:</strong> All operations are simple in-memory list scans followed by a small JSON
+            write, so no noticeable delay is expected at the scale of a college department library.<br>
+            • <strong>Data Safety:</strong> Records are saved after every change and on exit, so completed operations
+            are not lost between sessions.<br>
+            • <strong>Footprint &amp; Portability:</strong> Zero external dependencies; the whole program is a single
+            <code>main.py</code> file that runs on any system with Python 3.
+          </p>
+
+          <!-- CHAPTER 10 STARTS IN CENTER OF PAGE 6 -->
+          <div class="chapter-heading" style="margin-top: 10px;">
+            <div class="chapter-num">CHAPTER 10</div>
+            <div class="chapter-title">FUTURE SCOPE & CONCLUSION</div>
+          </div>
+
+          <div class="section-title">10.1 Future Scope</div>
+          <p style="font-size: 9.6pt; line-height: 1.4;">
+            The modular OOP design provides a good foundation for future extensions:<br>
+            1. <strong>Database Backend:</strong> Moving from JSON files to SQLite or MySQL for faster queries, safer
+            concurrent access, and sequential or UUID-based identifiers.<br>
+            2. <strong>Fine Payment &amp; Reminders:</strong> Tracking whether a fine has been paid and sending
+            automatic overdue reminder emails to students.<br>
+            3. <strong>Graphical / Web Interface &amp; Testing:</strong> A Tkinter or Flask front end, barcode-based
+            book lookup, and an automated unit test suite.
+          </p>
+
+          <div class="section-title" style="margin-top: 6px;">10.2 Conclusion</div>
+          <p>
+            The <strong>LIBRARY MANAGEMENT SYSTEM</strong> demonstrates that a command-line application can deliver
+            reliable
+            library automation without heavyweight dependencies. By combining Object-Oriented design, JSON-based
+            persistence, derived availability tracking, strict input validation, and an automatic overdue fine
+            calculation,
+            the project provides a practical and easy-to-use solution for managing books, students, and circulation
+            records
+            in an academic library, and offers a solid base for future enhancement.
+          </p>
+        </div>
+
+        <div class="page-footer">6</div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         BODY PAGE 7: APPENDIX A (SCREENS) & APPENDIX B (CODE)
+    ========================================================== -->
+    <div class="page">
+      <div class="page-border">
+        <div class="page-content">
+          <h2 style="font-size: 12.5pt; text-align: center; margin-bottom: 6px; text-transform: uppercase;">
+            APPENDIX A: USER INTERFACE SCREENS & TERMINAL WIREFRAMES
+          </h2>
+
+          <div style="font-size: 8.2pt; margin-bottom: 4px; text-align: center; color: #475569;">
+            The wireframes below depict actual interactive command-line interface layouts and user interaction flows:
+          </div>
+
+          <!-- Wireframe 1: Interactive Menu & Contextual Preview -->
+          <div class="figure-container" style="margin: 3px 0;">
+            <svg viewBox="0 0 540 82" width="540" height="82">
+              <rect x="5" y="4" width="530" height="74" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1" />
+              <rect x="15" y="8" width="510" height="14" fill="#1e293b" rx="2" />
+              <text x="25" y="18" fill="#38bdf8" font-size="6.8" font-weight="bold" font-family="monospace">========== LIBRARY MANAGEMENT SYSTEM ==========</text>
+
+              <text x="25" y="32" fill="#94a3b8" font-size="5.8" font-family="monospace">1. Add a book</text>
+              <text x="205" y="32" fill="#94a3b8" font-size="5.8" font-family="monospace">5. Register a student</text>
+              <text x="385" y="32" fill="#94a3b8" font-size="5.8" font-family="monospace">9. Display transactions</text>
+              <text x="25" y="41" fill="#94a3b8" font-size="5.8" font-family="monospace">2. Display all books</text>
+              <text x="205" y="41" fill="#94a3b8" font-size="5.8" font-family="monospace">6. Display students</text>
+              <text x="385" y="41" fill="#94a3b8" font-size="5.8" font-family="monospace">10. Show statistics</text>
+              <text x="25" y="50" fill="#94a3b8" font-size="5.8" font-family="monospace">3. Display available books</text>
+              <text x="205" y="50" fill="#94a3b8" font-size="5.8" font-family="monospace">7. Issue a book</text>
+              <text x="385" y="50" fill="#94a3b8" font-size="5.8" font-family="monospace">0. Exit</text>
+              <text x="25" y="59" fill="#94a3b8" font-size="5.8" font-family="monospace">4. Search books</text>
+              <text x="205" y="59" fill="#94a3b8" font-size="5.8" font-family="monospace">8. Return a book</text>
+              <text x="25" y="68" fill="#4ade80" font-size="5.8" font-family="monospace">Enter your choice: 7</text>
+            </svg>
+            <div class="figure-caption">Figure A.1: Interactive CLI Main Menu &amp; Command Selection Layout
+            </div>
+          </div>
+
+          <!-- Wireframe 2: Return Receipt & Overdue Prompt -->
+          <div class="figure-container" style="margin: 3px 0;">
+            <svg viewBox="0 0 540 72" width="540" height="72">
+              <rect x="15" y="4" width="510" height="64" fill="#1e293b" stroke="#334155" stroke-width="1" rx="4" />
+              <text x="25" y="16" fill="#e2e8f0" font-size="6.2" font-family="monospace">Enter transaction ID: T260510101500</text>
+              <text x="25" y="27" fill="#4ade80" font-size="6.8" font-weight="bold" font-family="monospace">Book 'The Pragmatic Programmer' returned successfully.</text>
+              <text x="35" y="37" fill="#e2e8f0" font-size="5.8" font-family="monospace">Overdue days: 3</text>
+              <line x1="25" y1="44" x2="515" y2="44" stroke="#475569" stroke-width="0.8" stroke-dasharray="2,2" />
+              <text x="35" y="55" fill="#facc15" font-size="6.2" font-weight="bold" font-family="monospace">Fine: Rs. 15</text>
+              <text x="35" y="63" fill="#94a3b8" font-size="5.8" font-family="monospace">(Due: 2026-05-17 | Returned: 2026-05-20 | transactions.json updated: status = Returned)</text>
+            </svg>
+            <div class="figure-caption">Figure A.2: Return Confirmation &amp; Overdue Fine Calculation Output</div>
+          </div>
+
+          <!-- APPENDIX B STARTS IN CENTER OF PAGE 7 -->
+          <h2
+            style="font-size: 12.5pt; text-align: center; margin-top: 10px; margin-bottom: 6px; text-transform: uppercase;">
+            APPENDIX B: SAMPLE CODE & CORE IMPLEMENTATION
+          </h2>
+
+          <div class="section-title">Code B.1: Return Book & Overdue Fine Logic (main.py)</div>
+          <pre
+            style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 4px; font-family: monospace; font-size: 6.8pt; line-height: 1.25; margin-bottom: 5px;">
+def return_book(self):
+    transaction_id = input("Enter transaction ID: ").strip()
+    transaction = next((item for item in self.transactions
+                        if item["id"].lower() == transaction_id.lower()), None)
+    if transaction is None:
+        print("Error: Invalid transaction ID.")
+        return
+    if transaction["status"] != "Issued":
+        print("This book has already been returned.")
+        return
+    returned_date = date.today()
+    due_date = date.fromisoformat(transaction["due_date"])
+    overdue_days = max(0, (returned_date - due_date).days)
+    fine = overdue_days * FINE_PER_DAY
+    transaction["returned_on"] = returned_date.isoformat()
+    transaction["fine"] = fine
+    transaction["status"] = "Returned"
+    self.save_all()</pre>
+
+          <div class="section-title">Code B.2: Available Copies Calculation (main.py)</div>
+          <pre
+            style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 4px; font-family: monospace; font-size: 6.8pt; line-height: 1.25;">
+def available_copies(self, book_id):
+    book = self.find_book(book_id)
+    if book is None:
+        return 0
+    issued_count = sum(1 for transaction in self.transactions
+                       if transaction["book_id"] == book_id
+                       and transaction["status"] == "Issued")
+    return max(0, book["quantity"] - issued_count)</pre>
+        </div>
+
+        <div class="page-footer">7</div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         BODY PAGE 8: APPENDIX C (SCHEMA) & APPENDIX D (TESTS & REFS)
+    ========================================================== -->
+    <div class="page">
+      <div class="page-border">
+        <div class="page-content">
+          <h2 style="font-size: 12.5pt; text-align: center; margin-bottom: 6px; text-transform: uppercase;">
+            APPENDIX C: DATA FILES & DATA DICTIONARY
+          </h2>
+
+          <div class="section-title">Table C.1: JSON Data Structure Specification ('transactions.json' Records)</div>
+          <table class="report-table left-align" style="font-size: 7.8pt; margin: 3px 0 8px 0;">
+            <thead>
+              <tr>
+                <th style="width: 18%;">Field Name</th>
+                <th style="width: 14%;">Data Type</th>
+                <th style="width: 18%;">Constraint / Format</th>
+                <th style="width: 50%;">Description & Business Rules</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>id</code></td>
+                <td>String</td>
+                <td>Unique; “T” + yymmddHHMMSS</td>
+                <td>Unique transaction identifier generated at the time of issue.</td>
+              </tr>
+              <tr>
+                <td><code>book_id</code></td>
+                <td>String</td>
+                <td>References books.json <code>id</code></td>
+                <td>Identifies the borrowed book.</td>
+              </tr>
+              <tr>
+                <td><code>student_id</code></td>
+                <td>String</td>
+                <td>References students.json <code>id</code></td>
+                <td>Identifies the borrowing student.</td>
+              </tr>
+              <tr>
+                <td><code>book_title</code>, <code>student_name</code></td>
+                <td>String</td>
+                <td>Copied at issue time</td>
+                <td>Stored in the record so the history can be shown without extra lookups.</td>
+              </tr>
+              <tr>
+                <td><code>issued_on</code></td>
+                <td>String</td>
+                <td>ISO YYYY-MM-DD</td>
+                <td>Date on which the book was issued (system date).</td>
+              </tr>
+              <tr>
+                <td><code>due_date</code></td>
+                <td>String</td>
+                <td>ISO YYYY-MM-DD; not in the past</td>
+                <td>Return deadline entered by the librarian.</td>
+              </tr>
+              <tr>
+                <td><code>returned_on</code></td>
+                <td>String / null</td>
+                <td>ISO date or null</td>
+                <td>Actual return date (null while the book is still issued).</td>
+              </tr>
+              <tr>
+                <td><code>fine</code></td>
+                <td>Integer</td>
+                <td>Default 0</td>
+                <td>Overdue fine in rupees (days late × ₹5), set on return.</td>
+              </tr>
+              <tr>
+                <td><code>status</code></td>
+                <td>String</td>
+                <td>“Issued” or “Returned”</td>
+                <td>Current state; “Issued” records reduce the available copies.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- APPENDIX D STARTS IN CENTER OF PAGE 8 -->
+          <h2
+            style="font-size: 12.5pt; text-align: center; margin-top: 8px; margin-bottom: 4px; text-transform: uppercase;">
+            APPENDIX D: TEST CASES & REFERENCES
+          </h2>
+
+          <div class="section-title">Table D.1: Representative Manual Test Cases Execution Matrix</div>
+          <table class="report-table left-align" style="font-size: 7.8pt; margin: 3px 0 6px 0;">
+            <thead>
+              <tr>
+                <th style="width: 12%; text-align:center;">Test ID</th>
+                <th style="width: 28%;">Test Scenario</th>
+                <th style="width: 35%;">Test Condition & Inputs</th>
+                <th style="width: 15%;">Expected Result</th>
+                <th style="width: 10%; text-align:center;">Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center;">TC-01</td>
+                <td>Stock Depletion Guard</td>
+                <td>Issue a book when all copies are already issued</td>
+                <td>Issue rejected</td>
+                <td style="text-align:center;color:green;font-weight:bold;">PASS</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">TC-02</td>
+                <td>Duplicate Email</td>
+                <td>Register a student with an existing email (different letter case)</td>
+                <td>Registration rejected</td>
+                <td style="text-align:center;color:green;font-weight:bold;">PASS</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">TC-03</td>
+                <td>Past Due Date</td>
+                <td>Issue a book with a due date earlier than today</td>
+                <td>Date rejected</td>
+                <td style="text-align:center;color:green;font-weight:bold;">PASS</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">TC-04</td>
+                <td>Overdue Fine Accrual</td>
+                <td>Return a book 3 days after its due date</td>
+                <td>Fine = Rs. 15</td>
+                <td style="text-align:center;color:green;font-weight:bold;">PASS</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">TC-05</td>
+                <td>Repeated Return</td>
+                <td>Return the same transaction ID twice</td>
+                <td>Second return rejected</td>
+                <td style="text-align:center;color:green;font-weight:bold;">PASS</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="section-title">REFERENCES</div>
+          <ol style="margin-left: 18px; font-size: 7.8pt; line-height: 1.35;">
+            <li>Python Software Foundation (2026) <em>The Python Standard Library: json — JSON encoder and
+                decoder</em>, docs.python.org.</li>
+            <li>Lutz, M. (2013) <em>Learning Python: Powerful Object-Oriented Programming</em>, 5th edn, O'Reilly Media.
+            </li>
+            <li>Pressman, R. S. and Maxim, B. R. (2020) <em>Software Engineering: A Practitioner’s Approach</em>, 9th
+              edn, McGraw-Hill Education.</li>
+            <li>Python Software Foundation (2026) <em>The Python Standard Library: datetime — Basic date and time
+                types</em>, docs.python.org.</li>
+            <li>Brainware University (2026) <em>Guidelines for MCA Academic Project Documentation and Viva Voce</em>,
+              Department of Computational Sciences.</li>
+          </ol>
+        </div>
+
+        <div class="page-footer">8</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* Auto-fit: shrink a page's content just enough to stay inside one A4 sheet */
+    function fitPage(border) {
+      var content = border.querySelector(".page-content");
+      if (!content) return;
+      content.style.zoom = 1;
+      if (border.scrollHeight <= border.clientHeight) return;
+      var lo = 0.6, hi = 1;
+      for (var i = 0; i < 12; i++) {
+        var mid = (lo + hi) / 2;
+        content.style.zoom = mid;
+        if (border.scrollHeight <= border.clientHeight) lo = mid; else hi = mid;
+      }
+      content.style.zoom = lo;
+    }
+
+    function fitPages() {
+      document.querySelectorAll(".page-border").forEach(fitPage);
+    }
+    window.addEventListener("load", fitPages);
+    window.addEventListener("beforeprint", fitPages);
+
+    /* Editor: border style, font, in-place editing, save back to file */
+    (function () {
+      var root = document.documentElement;
+      var borderSelect = document.getElementById("borderSelect");
+      var fontSelect = document.getElementById("fontSelect");
+      var editBtn = document.getElementById("editBtn");
+      var saveBtn = document.getElementById("saveBtn");
+      var saveStatus = document.getElementById("saveStatus");
+      var fileHandle = null;
+      var dirty = false;
+
+      function setStatus(text) {
+        saveStatus.textContent = text;
+      }
+
+      function markDirty() {
+        dirty = true;
+        setStatus("Unsaved changes");
+      }
+
+      // Show the current settings in the dropdowns
+      var css = getComputedStyle(root);
+      var currentBorder = css.getPropertyValue("--border-width").trim() + " " + css.getPropertyValue("--border-style").trim();
+      var currentFont = css.getPropertyValue("--report-font").trim();
+      Array.prototype.forEach.call(borderSelect.options, function (o) { if (o.value === currentBorder) o.selected = true; });
+      Array.prototype.forEach.call(fontSelect.options, function (o) { if (o.value === currentFont) o.selected = true; });
+
+      borderSelect.addEventListener("change", function () {
+        var parts = borderSelect.value.split(" ");
+        root.style.setProperty("--border-width", parts[0]);
+        root.style.setProperty("--border-style", parts[1]);
+        fitPages();
+        markDirty();
+      });
+
+      fontSelect.addEventListener("change", function () {
+        root.style.setProperty("--report-font", fontSelect.value);
+        fitPages();
+        markDirty();
+      });
+
+      editBtn.addEventListener("click", function () {
+        var on = !document.body.classList.contains("editing");
+        document.body.classList.toggle("editing", on);
+        editBtn.classList.toggle("active", on);
+        editBtn.textContent = on ? "✅ Done" : "✏️ Edit";
+        document.querySelectorAll(".page-border").forEach(function (b) {
+          if (on) b.setAttribute("contenteditable", "true");
+          else b.removeAttribute("contenteditable");
+        });
+      });
+
+      document.querySelector(".report-container").addEventListener("input", function (e) {
+        var border = e.target.closest(".page-border");
+        if (border) fitPage(border);
+        markDirty();
+      });
+
+      // Build a clean copy of the page, without editor state
+      function serialize() {
+        var clone = root.cloneNode(true);
+        clone.querySelectorAll("[contenteditable]").forEach(function (el) { el.removeAttribute("contenteditable"); });
+        clone.querySelectorAll(".page-content").forEach(function (el) {
+          el.style.removeProperty("zoom");
+          if (!el.getAttribute("style")) el.removeAttribute("style");
+        });
+        clone.querySelector("body").classList.remove("editing");
+        if (!clone.querySelector("body").className) clone.querySelector("body").removeAttribute("class");
+        var cloneEditBtn = clone.querySelector("#editBtn");
+        cloneEditBtn.classList.remove("active");
+        cloneEditBtn.textContent = "✏️ Edit";
+        clone.querySelector("#saveStatus").textContent = "";
+        clone.querySelectorAll("#borderSelect option, #fontSelect option").forEach(function (o) { o.removeAttribute("selected"); });
+        return "<!DOCTYPE html>\n" + clone.outerHTML;
+      }
+
+      async function save() {
+        var html = serialize();
+        try {
+          if (window.showSaveFilePicker) {
+            if (!fileHandle) {
+              fileHandle = await window.showSaveFilePicker({
+                suggestedName: "project-report.html",
+                types: [{ description: "HTML file", accept: { "text/html": [".html"] } }]
+              });
+            }
+            var writable = await fileHandle.createWritable();
+            await writable.write(html);
+            await writable.close();
+          } else {
+            var link = document.createElement("a");
+            link.href = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+            link.download = "project-report.html";
+            link.click();
+            URL.revokeObjectURL(link.href);
+          }
+          dirty = false;
+          setStatus("Saved ✓");
+        } catch (err) {
+          if (err.name !== "AbortError") setStatus("Save failed");
+        }
+      }
+
+      saveBtn.addEventListener("click", save);
+
+      document.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+          e.preventDefault();
+          save();
+        }
+      });
+
+      window.addEventListener("beforeunload", function (e) {
+        if (dirty) {
+          e.preventDefault();
+          e.returnValue = "";
+        }
+      });
+    })();
+  </script>
+
+</body>
+
+</html>

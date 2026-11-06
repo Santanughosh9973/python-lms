@@ -1,0 +1,26 @@
+[
+    {
+        "id": "T261009111030",
+        "book_id": "B1003",
+        "book_title": "The Alchemist",
+        "student_id": "S1002",
+        "student_name": "Priya Sen",
+        "issued_on": "2026-10-09",
+        "due_date": "2026-10-11",
+        "returned_on": "2026-10-09",
+        "fine": 0,
+        "status": "Returned"
+    },
+    {
+        "id": "T261009112539",
+        "book_id": "B1003",
+        "book_title": "The Alchemist",
+        "student_id": "S1002",
+        "student_name": "Priya Sen",
+        "issued_on": "2026-10-09",
+        "due_date": "2026-10-11",
+        "returned_on": null,
+        "fine": 0,
+        "status": "Issued"
+    }
+]

@@ -1,0 +1,26 @@
+[
+    {
+        "id": "B1001",
+        "title": "Python Crash Course",
+        "author": "Eric Matthes",
+        "quantity": 4
+    },
+    {
+        "id": "B1002",
+        "title": "Clean Code",
+        "author": "Robert C. Martin",
+        "quantity": 3
+    },
+    {
+        "id": "B1003",
+        "title": "The Alchemist",
+        "author": "Paulo Coelho",
+        "quantity": 2
+    },
+    {
+        "id": "B261009093710",
+        "title": "love story",
+        "author": "avijan",
+        "quantity": 100
+    }
+]
